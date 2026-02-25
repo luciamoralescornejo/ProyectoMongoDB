@@ -134,4 +134,18 @@ public class Conector {
 
         return lista;
     }
+    
+    public ArrayList<Document> listarId(String continentev) {
+        ArrayList<Document> lista = new ArrayList<>();
+            MongoCollection<Document> colecc = mdb.getCollection("continentes");
+            MongoCollection<Document> paises = mdb.getCollection("paises");
+            Document conti = colecc.find(new Document("nombre", continentev)).first();
+            ObjectId continenteId = conti.getObjectId("_id");
+
+            FindIterable<Document> documentos = paises.find(new Document("continenteId", continenteId));
+            for (Document documento : documentos) {
+                lista.add(documento);
+            } 
+        return lista;
+    }
 }
