@@ -35,8 +35,8 @@ public class Consultas extends javax.swing.JDialog {
         if (conector.conectar()) {
             ArrayList<Document> lista = conector.listarContinentes();
             if (!lista.isEmpty()) {
-                for (Document us : lista) {
-                    Object o = us.get("nombre");
+                for (Document document : lista) {
+                    Object o = document.get("nombre");
                     modelo.addElement(o);
                 }
             }
@@ -222,30 +222,41 @@ public class Consultas extends javax.swing.JDialog {
 
     private void jCContinenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCContinenteActionPerformed
         String nombre, habitantes, fila;
-        long habitantesContinente = 0;
+        int habitantesContinente = 0;
 
+        //se obtiene el item seleccionado 
         Object seleccionado = jCContinente.getSelectedItem();
+        
+        //comprueba que no sea nulo 
         if (seleccionado != null) {
-            String continenteSeleccionado = seleccionado.toString();
+            String continenteSeleccionado = seleccionado.toString(); // y se convierte en texto
 
-            DefaultListModel<String> modelo = new DefaultListModel<>();
-            ArrayList<Document> listaPaises = conector.listarId(continenteSeleccionado);
+            DefaultListModel<String> modelo = new DefaultListModel<>(); //modelo para llenar la lista de paises 
+            
+            //llama al método del conector y devuelce la lista del continente seleccionado
+            ArrayList<Document> listaPaises = conector.listarId(continenteSeleccionado); 
 
+            //nos conectamos a la bd 
             if (conector.conectar()) {
+                
+                //si no hay paises en el continente seleccionado 
                 if (listaPaises.isEmpty()) {
-                    modelo.clear();
-                    lista.setModel(modelo);
-                    jLabel1.setText("");
+                    modelo.clear(); // se limpia el modelo de la lista para no mostrar los antiguos
+                    lista.setModel(modelo); // y ponemos el nuevo modelo 
+                    jLabel1.setText(""); //limpiamos la etiqueta 
                     JOptionPane.showMessageDialog(null, "La lista está vacía.");
                 } else {
+                    //recorro cada documento en listaPaises
                     for (Document pais : listaPaises) {
+                        
+                        // extraigo el nombre y los habitantes del documento de Mongo
                         nombre = pais.getString("nombre");
-
-                        habitantes = String.valueOf(pais.getInteger("habitantes"));
-                        long numHabi = Long.parseLong(habitantes);
+                        habitantes = String.valueOf(pais.getInteger("habitantes")); 
+                        
+                        int numHabi = Integer.parseInt(habitantes);
                         habitantesContinente += numHabi;
 
-                        fila = nombre + " | " + habitantes;
+                        fila = nombre + " | " + habitantes; // crea la fila con el formato
                         modelo.addElement(fila);
                     }
 

@@ -15,8 +15,8 @@ import org.bson.Document;
  * @author Usuario
  */
 public class Países extends javax.swing.JDialog {
-    
-    Conector conector; 
+
+    Conector conector;
 
     /**
      * Creates new form OperacionesPais
@@ -24,16 +24,16 @@ public class Países extends javax.swing.JDialog {
     public Países(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        conector = new Conector(); 
+        conector = new Conector();
         jCPais.removeAllItems();
         jCContinente.removeAllItems();
-        
+
         //cargamos el contenido de los combo
-        cargarContinentes(); 
-        cargarPaises(); 
+        cargarContinentes();
+        cargarPaises();
     }
-    
-    private void cargarContinentes(){
+
+    private void cargarContinentes() {
         DefaultComboBoxModel modelo = new DefaultComboBoxModel();
         if (conector.conectar()) {
             ArrayList<Document> lista = conector.listarContinentes();
@@ -42,14 +42,18 @@ public class Países extends javax.swing.JDialog {
                     Object o = us.get("nombre");
                     modelo.addElement(o);
                 }
+                jCContinente.setModel(modelo);
+            } else {
+                JOptionPane.showMessageDialog(this, "No hay continentes en la base de datos. Cree uno primero.");
+                dispose(); // cierra la ventana si no hay continentes
             }
-            jCContinente.setModel(modelo);
         } else {
-            JOptionPane.showMessageDialog(null, "ERROR. No hay conexión a la base de datos.");
+            JOptionPane.showMessageDialog(this, "ERROR. No hay conexión a la base de datos.");
+            dispose();
         }
     }
-    
-    private void cargarPaises(){
+
+    private void cargarPaises() {
         DefaultComboBoxModel modelo = new DefaultComboBoxModel();
         if (conector.conectar()) {
             ArrayList<Document> lista = conector.listarPaises();
@@ -230,10 +234,10 @@ public class Países extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBEliminarActionPerformed
-        String pais = jCPais.getSelectedItem().toString(); 
-        
-        if(conector.conectar()) {
-            if(conector.EliminarPais(pais)) {
+        String pais = jCPais.getSelectedItem().toString();
+
+        if (conector.conectar()) {
+            if (conector.EliminarPais(pais)) {
                 JOptionPane.showMessageDialog(null, "País eliminado correctamente.");
                 cargarPaises();
             }
@@ -247,15 +251,15 @@ public class Países extends javax.swing.JDialog {
     }//GEN-LAST:event_jBCerrarActionPerformed
 
     private void jBAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAñadirActionPerformed
-        String continente = jCContinente.getSelectedItem().toString().trim(); 
-        int num = Integer.parseInt(jTHabitantes.getText().trim()); 
-        String nombre = jTNombre.getText().trim(); 
-        
-        if(continente.length() == 0 || num < 0 || jTHabitantes.getText().length() == 0 || nombre.length() == 0) {
+        String continente = jCContinente.getSelectedItem().toString().trim();
+        int num = Integer.parseInt(jTHabitantes.getText().trim());
+        String nombre = jTNombre.getText().trim();
+
+        if (continente.length() == 0 || num < 0 || jTHabitantes.getText().length() == 0 || nombre.length() == 0) {
             JOptionPane.showMessageDialog(null, "ERROR. Todos los campos deben ser rellenados correctamente.");
         } else {
-            if(conector.conectar()) {
-                if(conector.altaPais(continente, num, nombre)) {
+            if (conector.conectar()) {
+                if (conector.altaPais(continente, num, nombre)) {
                     JOptionPane.showMessageDialog(null, "País añadido correctamente.");
                     jTHabitantes.setText("");
                     jTNombre.setText("");

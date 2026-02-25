@@ -116,11 +116,14 @@ public class Continentes extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBAnadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAnadirActionPerformed
-        String continente = jTContinente.getText().trim(); 
+        String continente = jTContinente.getText().trim(); //cogemos el contenido del jTContinente
+        
+        //comprobamos que se rellean los campos
         if(continente.length() == 0) {
             JOptionPane.showMessageDialog(null, "ERROR. Debe rellenar todos los campos.");
         } else {
             if(conector.conectar()) {
+                //llamamos al metodo del controlador que añade continentes
                 if(conector.altaContinente(continente)) { 
                     JOptionPane.showMessageDialog(null, "Continente añadido correctamente.");
                     jTContinente.setText("");

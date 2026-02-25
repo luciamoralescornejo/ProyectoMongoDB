@@ -11,13 +11,9 @@ import javax.swing.JOptionPane;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-/**
- * Clase encargada de gestionar la conexión y las operaciones CRUD con la base
- * de datos MongoDB para la gestión de continentes y países.
- */
 public class Conector {
 
-    private final String db = "paises";
+    private final String db = "paises"; //nombre de la base de datos en mongo
     private final String url = "mongodb://localhost:27017";
     private final String urlatlas = "";
 
@@ -26,6 +22,7 @@ public class Conector {
     public Conector() {
     }
 
+    //nos conectamos a la base de datos
     public boolean conectar() {
         boolean b = false;
 
@@ -39,6 +36,7 @@ public class Conector {
         return b;
     }
 
+    //método para agregar un nuevo continente 
     public boolean altaContinente(String continentev) {
         boolean b = false;
         if (continentev != null) {
@@ -49,9 +47,9 @@ public class Conector {
                 b = true;
             } catch (MongoWriteException e) {
                 if (e.getCode() == 11000) {
-                    System.err.println("Error: Duplicidad en al clave");
+                    JOptionPane.showMessageDialog(null, "ERROR. El continente ya existe.");
                 } else {
-                    System.err.println("Error de escritura en Mongo");
+                    JOptionPane.showMessageDialog(null, "Error de escritura en MongoDB.");
                 }
             }
 
@@ -61,17 +59,17 @@ public class Conector {
 
         return b;
     }
-    
+
     public boolean altaPais(String continentev, int numHabitantesv, String nombrev) {
         boolean b = false;
         if (nombrev != null) {
             MongoCollection<Document> coleccion = mdb.getCollection("continentes");
             MongoCollection<Document> paises = mdb.getCollection("paises");
-            
-            Document continente = coleccion.find(new Document("nombre", continentev)).first(); 
-            
-            ObjectId continenteId = continente.getObjectId("_id"); 
-            
+
+            Document continente = coleccion.find(new Document("nombre", continentev)).first();
+
+            ObjectId continenteId = continente.getObjectId("_id");
+
             try {
                 Document pais = new Document("habitantes", numHabitantesv)
                         .append("nombre", nombrev)
@@ -92,21 +90,21 @@ public class Conector {
 
         return b;
     }
-    
-    public boolean EliminarPais (String nombre) {
-        boolean b = false; 
-        
+
+    public boolean EliminarPais(String nombre) {
+        boolean b = false;
+
         MongoCollection<Document> col = mdb.getCollection("paises");
-        
-        Document doc = new Document("nombre", nombre); 
-        
-        if(doc != null) {
-            col.findOneAndDelete(doc); 
+
+        Document doc = new Document("nombre", nombre);
+
+        if (doc != null) {
+            col.findOneAndDelete(doc);
             b = true;
         }
-        return b; 
+        return b;
     }
-    
+
     public ArrayList<Document> listarPaises() {
         ArrayList<Document> lista = new ArrayList<>();
 
@@ -120,7 +118,7 @@ public class Conector {
 
         return lista;
     }
-    
+
     public ArrayList<Document> listarContinentes() {
         ArrayList<Document> lista = new ArrayList<>();
 
@@ -134,18 +132,22 @@ public class Conector {
 
         return lista;
     }
-    
+
+    // método que devuelve una lista de países por el id del continente 
     public ArrayList<Document> listarId(String continentev) {
         ArrayList<Document> lista = new ArrayList<>();
-            MongoCollection<Document> colecc = mdb.getCollection("continentes");
-            MongoCollection<Document> paises = mdb.getCollection("paises");
-            Document conti = colecc.find(new Document("nombre", continentev)).first();
-            ObjectId continenteId = conti.getObjectId("_id");
-
-            FindIterable<Document> documentos = paises.find(new Document("continenteId", continenteId));
-            for (Document documento : documentos) {
-                lista.add(documento);
-            } 
+        MongoCollection<Document> coleccion = mdb.getCollection("continentes");
+        MongoCollection<Document> paises = mdb.getCollection("paises");
+        Document continente = coleccion.find(new Document("nombre", continentev)).first();
+        ObjectId continenteId = continente.getObjectId("_id"); //obtiene el id del continente 
+        
+        //Busca en la colección de países todos los documentos donde el campo continenteId es igual al id del continente
+        FindIterable<Document> documentos = paises.find(new Document("continenteId", continenteId));
+        
+        //recorre los paises encontrados y los añade a la lista
+        for (Document documento : documentos) {
+            lista.add(documento);
+        }
         return lista;
     }
 }
