@@ -1,7 +1,10 @@
 Vista\Main.class
 Vista\Main$1.class
+Vista\Países$4$1.class
 Vista\Main$2.class
+Vista\Países$3.class
 Vista\Consultas$1.class
+Vista\Países$2.class
 Vista\Main$3.class
 Vista\Continentes$3.class
 Vista\Continentes$2.class
@@ -9,7 +12,6 @@ Vista\Consultas.class
 Vista\Continentes.class
 Vista\Países.class
 Vista\Main$4.class
-Vista\Países$1$1.class
 Vista\Main$5.class
 Vista\Países$1.class
 Vista\Main$6.class
@@ -17,3 +19,4 @@ Controlador\Conector.class
 Vista\Consultas$1$1.class
 Vista\Continentes$3$1.class
 Vista\Continentes$1.class
+Vista\Países$4.class

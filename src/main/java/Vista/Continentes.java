@@ -127,6 +127,8 @@ public class Continentes extends javax.swing.JDialog {
                 } else {
                     JOptionPane.showMessageDialog(null, "ERROR. No se pudo completar la operación.");
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "ERROR. No se pudo conectar a la base de datos.");
             }
         }
     }//GEN-LAST:event_jBAnadirActionPerformed
